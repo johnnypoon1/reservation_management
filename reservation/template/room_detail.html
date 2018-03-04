@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+    <h1>{{ room.name }}</h1>
+    <p>{{ room.description }}</p>
+    <p>Price: ${{ room.price }}</p>
+    <p>Bed(s): {{ room.number_beds }} {{room.bed_type.name }}</p>
+    {% if room_left > 0 %}
+    <a href="{% url 'reserve' room.id %}">Book now</a>
+    {% else %}
+    No Room Available
+    {% endif %}
+</body>
+</html>

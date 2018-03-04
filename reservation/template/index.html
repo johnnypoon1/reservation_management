@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Rooms and Reservations</title>
+
+        <style>
+        table, th, td {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <h1>Rooms</h1>
+    <table style="width:100%">
+        <tr>
+            <th>Room</th>
+            <th>Price</th>
+            <th>Availability</th>
+            <th>Actions</th>
+        </tr>
+        {% for room in available_rooms %}
+        {% load humanize %}
+        <tr>
+            <td><a href="{% url 'room_detail' room.id %}">{{ room.room_type }}</a><br><br>{{ room.description }}</td>
+            <td align="middle">${{ room.price|intcomma }}</td>
+            <td align="middle">{{ room.room_left }}</td>
+            <td>
+                {% if room.room_left > 0 %}
+                <a href="{% url 'reserve' room.id %}">Book now</a>
+                {% else %}
+                No Room Available
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h1>Reservations</h1>
+    <table style="width:100%">
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Room Number</th>
+            <th>Duration</th>
+            <th>E-mail</th>
+            <th>Phone</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+        {% for reservation in reservations %}
+        <tr>
+            <td>{{ reservation.first_name }}</td>
+            <td>{{ reservation.last_name }}</td>
+            <td>{{ reservation.room.room_num }}</td>
+            <td>{{ reservation.arrival }} - {{ reservation.departure }}</td>
+            <td>{{ reservation.email }}</td>
+            <td>{{ reservation.phone }}</td>
+            <td>{{ reservation.status }}</td>
+            <td>
+                {% if reservation.status == 'reserved' %}
+                <a href="{% url 'checkin' reservation.id %}">Check in</a> |
+                {% endif %}
+                {% if reservation.status == 'Checked in' and reservation.status != 'help' %}
+                <a href="{% url 'checkout'  reservation.id %}">Check out</a> |
+                {% endif %}
+                {% if reservation.status == 'reserved' %}
+                <a href="{% url 'remove'  reservation.id %}">Cancel</a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
